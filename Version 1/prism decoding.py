@@ -77,6 +77,16 @@ class decoder:
             self.inbuffer=self.inbuffer[11:]
         if self.extrabits[1]>0:
             self.outbuffer=self.outbuffer[:0-self.extrabits[1]]
+    def check_decode_memory(self):
+        Error=False
+        while len(self.inbuffer)>11:
+            Outchunk,Repaired=check_and_decode(tuple(self.inbuffer[:11]))
+            self.outbuffer+=Outchunk
+            Error=Error or Repaired
+            self.inbuffer=self.inbuffer[11:]
+        self.outbuffer+=self.inbuffer[:6]
+        if self.extrabits[1]>0:
+            self.outbuffer=self.outbuffer[:0-self.extrabits[1]]
 
 def Decode_File(filename):
     D=decoder(filename)
@@ -84,6 +94,14 @@ def Decode_File(filename):
     D.decode_memory()
     return to_bytes(D.outbuffer)
 
+def Check_And_Decode_File(filename):
+    D=decoder(filename)
+    D.load_to_memory()
+    D.check_decode_memory()
+    return to_bytes(D.outbuffer)
+
+
 if __name__=='__main__':
-    B=Decode_File("prism encoding encoded.enc")
-    print(B.decode())
+    B=Check_And_Decode_File("prism encoding encoded.enc")
+    Decoded=B.decode()
+    print(Decoded)
