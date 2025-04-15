@@ -8,11 +8,11 @@ def bits_to_bytes(Bits):
         N=0
         if len(Bits)>7:
             for n in range(8):
-                N+=Bits[n]<<n
+                N+=Bits[n]<<(7-n)
             Bits=Bits[8:]
         else:
             for n in range(len(Bits)):
-                N+=Bits[n]<<n
+                N+=Bits[n]<<(7-n)
             Bits=Bits[8:]
         Out+=bytes([N])
     return Out

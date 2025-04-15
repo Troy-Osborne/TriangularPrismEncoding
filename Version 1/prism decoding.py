@@ -22,13 +22,11 @@ def check_and_decode(ElevenIn):##must be tuple
             Trustworthy=False
     return decode(TrueVal),Trustworthy
 
-def bits(B):
-    L=[B&1]
-    B=B>>1
-    for i in range(7):
-        L.append(B&1)
-        B=B>>1
-    return L
+def bits(i):
+    s=bin(i)[2:]
+    l=len(s)
+    return [0]*(8-l)+list(map(int,s))
+
 
 def to_bytes(Bits):
     Out=b""
@@ -36,11 +34,11 @@ def to_bytes(Bits):
         N=0
         if len(Bits)>7:
             for n in range(8):
-                N+=Bits[7-n]<<n
+                N+=Bits[n]<<(7-n)
             Bits=Bits[8:]
         else:
             for n in range(len(Bits)):
-                N+=Bits[n]<<n
+                N+=Bits[n]<<(7-n)
             Bits=Bits[8:]
         Out+=bytes([N])
     return Out
